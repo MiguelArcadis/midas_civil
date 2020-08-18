@@ -5,8 +5,8 @@ import mlc_func
 pd.set_option('display.max_columns', 20)
 
 #Reads excel file and creats input dataframe
-file_path_in = r"C:\Users\silvam3530\ARCADIS\ASC HS2 Project Portal - 03 - Project Execution\07 - C3 Section\05 - Boddington Cutting\01 - BR - Bridges\Banbury Rd OB (Boddington)\02 Working\01 Structures\02 Models\Global\Combinations" + "\\"
-file_name_in = "BRB - Load Comb 3"
+file_path_in = r"C:\Users\silvam3530\ARCADIS\ASC HS2 Project Portal - 03 - Project Execution\07 - C3 Section\05 - Boddington Cutting\01 - BR - Bridges\Banbury Rd OB (Boddington)\02 Working\01 Structures\02 Models\03. Combinations" + "\\"
+file_name_in = "BRB - Load Comb 4"
 extension_in = ".xlsx"
 
 file_path_out = file_path_in

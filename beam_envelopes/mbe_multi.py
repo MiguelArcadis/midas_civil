@@ -4,19 +4,22 @@ import sys
 pd.options.mode.chained_assignment = None
 
 #Reads excel file and creats input dataframe
-file_path_in = r"C:\Users\silvam3530\ARCADIS\ASC HS2 Project Portal - 03 - Project Execution\07 - C3 Section\05 - Boddington Cutting\01 - BR - Bridges\Banbury Rd OB (Boddington)\02 Working\01 Structures\03 Calcs\07. Piles\Pier Piles" + "\\"
-file_name_in = "Forces"
+file_path_in = r"C:\Users\silvam3530\ARCADIS\ASC HS2 Project Portal - 03 - Project Execution\07 - C3 Section\05 - Boddington Cutting\01 - BR - Bridges\Banbury Rd OB (Boddington)\02 Working\01 Structures\03 Calcs\20. SSI - Geotech\2020-08-18" + "\\"
+file_name_in = "Loads from Midas"
 extension_in = ".xlsx"
 
-forces_to_extract = ['Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz',
-					 '[SRSS] Fx, My', '[SRSS] Fx, Mz', '[SRSS] My, Mz']
+elements_to_extract = "Main Girder Sag" #go to excel file find "West Abutment get column to the right side"
+
+
+# Possible forces = ['Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz','[SRSS] Fx, My', '[SRSS] Fx, Mz', '[SRSS] My, Mz']
+# Copy and past as needed
+forces_to_extract = ['Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz']
 
 try:
 	df_in = pd.read_excel(file_path_in + file_name_in + extension_in)
 except FileNotFoundError:
 	print("The file selected could not be found. Please make sure you have the correct path, file name, and extension.")
 	sys.exit()
-
 df_out = pd.DataFrame()
 
 try:
@@ -36,6 +39,7 @@ try:
 	df_in['[SRSS] Fx, My'] = (df_in['Fx'] ** 2 + df_in['My'] ** 2) ** 0.5
 	df_in['[SRSS] Fx, Mz'] = (df_in['Fx'] ** 2 + df_in['Mz'] ** 2) ** 0.5
 	df_in['[SRSS] My, Mz'] = (df_in['My'] ** 2 + df_in['Mz'] ** 2) ** 0.5
+	#df_in['[MinMax] Fx, MY'] = abs(df_in['Fx']) / abs(df_in['My'])
 
 
 	unique_elements = list(df_in['Element'].unique())
