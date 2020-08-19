@@ -1,16 +1,16 @@
 import pandas as pd
 import numpy as np
 import itertools
-import mlc_func
+from load_combs import combination_functions as mlc_func
 pd.set_option('display.max_columns', 20)
 
 #Reads excel file and creats input dataframe
-file_path_in = r"C:\Users\silvam3530\ARCADIS\ASC HS2 Project Portal - 03 - Project Execution\07 - C3 Section\05 - Boddington Cutting\01 - BR - Bridges\Banbury Rd OB (Boddington)\02 Working\01 Structures\02 Models\03. Combinations" + "\\"
+file_path_in = r"C:\Users\silvam3530\Desktop" + "\\"
 file_name_in = "BRB - Load Comb 4"
 extension_in = ".xlsx"
 
 file_path_out = file_path_in
-file_name_out = file_name_in + " _ MLC"
+file_name_out = file_name_in
 extension_out = extension_in
 
 #Creates and processes input dataframe to rename columns and fill blanks
@@ -69,9 +69,12 @@ for comb in list_of_combs:
 df_out = df_out.append(pd.DataFrame(list_of_all_permutations, columns = df_out.columns))
 
 mct_string = mlc_func.df_to_mct(df_out)
-text_file = open(file_path_out + file_name_out + ".txt", "w")
+
+mlc_func.combs_list_to_excel(df_out, file_path_out, file_name_out, extension_out)
+
+text_file = open(file_path_out + file_name_out + '_MCT_shell' + ".txt", "w")
 text_file.write(mct_string)
 text_file.close()
 
 
-df_out.to_excel(file_path_out + file_name_out + extension_out)
+df_out.to_excel(file_path_out + file_name_out + '_MLC1' + extension_out)

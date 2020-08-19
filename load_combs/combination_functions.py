@@ -1,5 +1,6 @@
 import numpy as np
 from  more_itertools import unique_everseen
+import xlsxwriter
 
 def zigzag(seq):
     return seq[::2], seq[1::2]
@@ -56,7 +57,6 @@ def remove_duplicates(comb_permutations):
             unique_comb_permutations.append(comb)
     return unique_comb_permutations
 
-
 def df_to_mct(df):
     full_array = np.array(df)
 
@@ -104,3 +104,37 @@ def df_to_mct(df):
             mct_string = mct_string + 'CB' + ', ' + str(comb) + ', ' + '1.0'
 
     return mct_string
+
+
+def list_string_converter(lst):
+    final_string = ', '.join("'{0}'".format(l) for l in lst)
+    final_string = final_string.rstrip(',')
+    return final_string
+
+def combs_list_to_excel(df, file_path_out, file_name_out, extension_out):
+    full_array = np.array(df)
+    combinations = full_array[2:, 0]
+
+    combination_envelopes = []
+    for comb in combinations:
+        combination_envelopes.append(comb.split('_')[0])
+        combination_envelopes.append(comb.split('|')[0])
+
+    combination_envelopes = list(unique_everseen(combination_envelopes))
+ 
+    combination_groups = []
+    for envelope in combination_envelopes:
+        group = []
+        for comb in combinations:
+            if envelope in comb:
+                group.append(str(comb) + '(CB:max)')
+                group.append(str(comb) + '(CB:min)')
+        combination_groups.append(group)
+
+    with xlsxwriter.Workbook(file_path_out + file_name_out + '_MLC2' + extension_out) as workbook:
+        worksheet = workbook.add_worksheet()
+
+        for row in range(len(combination_envelopes)):
+            worksheet.write(row, 0, combination_envelopes[row])
+            worksheet.write(row, 1, list_string_converter(combination_groups[row]))
+
