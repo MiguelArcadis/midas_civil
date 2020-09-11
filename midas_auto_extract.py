@@ -29,6 +29,7 @@ ELEMENTS_TO_EXTRACT = list(dict.fromkeys(elem_extract))
 # Midas parts to extract
 parts_extract = source_df['Node(s)'].tolist()
 ELEMENT_PARTS_TO_EXTRACT = list(dict.fromkeys(parts_extract))
+print(ELEMENT_PARTS_TO_EXTRACT)
 
 # Midas forces to extract
 all_force_cols_names = ['Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz']
@@ -51,6 +52,11 @@ for index, row in source_df['Element no.'].items():
 
 COMBS_TO_EXTRACT = [item for sublist in comb_extract for item in sublist]
 COMBS_TO_EXTRACT = list(dict.fromkeys(COMBS_TO_EXTRACT))
+
+
+# Create {Element no: Element Name} dictionary
+elem_names = source_df['Element name'].tolist()
+elem_num_names = dict(zip(elem_extract, elem_names))
 
 
 def midas_parser(elements_to_extract, combs_to_extract, element_parts_to_extract):
@@ -91,13 +97,17 @@ def midas_parser(elements_to_extract, combs_to_extract, element_parts_to_extract
 		item_wrapper.select(comb).set_focus().type_keys('{VK_SPACE}')
 
 	# Select the element parts 
-	preset_parts = ['Part   i', 'Part   j']
+	preselected_parts = ['Part   i', 'Part   j']
 
-	for item in preset_parts:
+	for item in preselected_parts:
 		if item in ELEMENT_PARTS_TO_EXTRACT:
 			ELEMENT_PARTS_TO_EXTRACT.remove(item)
+		else:
+			ELEMENT_PARTS_TO_EXTRACT.append(item)
+			print(ELEMENT_PARTS_TO_EXTRACT)
 
 	for part in ELEMENT_PARTS_TO_EXTRACT:
+		print(f"Clicked on part: {part}")
 		app.RecordsActivationDialog.ListBox3.select(part).set_focus().type_keys('{VK_SPACE}')
 
 	# Press 'ok' for Midas to calculate results
@@ -154,8 +164,13 @@ df_midas_results = midas_parser(ELEMENTS_TO_EXTRACT, COMBS_TO_EXTRACT,FORCES_TO_
 # Extracts results per combination from Midas table containing all results
 df_out = pfr.extract_results_per_combination(df_midas_results, FORCES_TO_EXTRACT)
 
+# Adds a new column to df_out to map the element no. to element name. Ease of use by user
+df_out.insert(loc=0, column='Name', value=np.NaN)
+df_out['Name'] = df_out['Element'].map(elem_num_names)
+
 # Saves to desired path
 df_out.to_excel(file_path_out + file_name_out + extension_out)
 
 # Write success message when program has finished
 ctypes.windll.user32.MessageBoxW(0, "Results have been successfully extracted and saved at your chosen location.", "Midas Auto Extract", 0x1000)
+
