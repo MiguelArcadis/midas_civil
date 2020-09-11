@@ -46,7 +46,6 @@ for comb in list_of_combs:
 			comb[index] = float(item[1:])
 
 	# Runs all the functions to create combinations and filter out unnecessary results
-
 	comb_upper, comb_lower = mlc_func.zigzag(comb)
 
 	current_list = [None] * min(len(comb_upper), len(comb_lower))

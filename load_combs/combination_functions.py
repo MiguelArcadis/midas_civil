@@ -111,6 +111,12 @@ def list_string_converter(lst):
     final_string = final_string.rstrip(',')
     return final_string
 
+
+def char_range(c1, c2):
+    """Generates the characters from `c1` to `c2`, inclusive."""
+    for c in range(ord(c1), ord(c2)+1):
+        yield chr(c)
+
 def combs_list_to_excel(df, file_path_out, file_name_out, extension_out):
     full_array = np.array(df)
     combinations = full_array[2:, 0]
@@ -131,10 +137,67 @@ def combs_list_to_excel(df, file_path_out, file_name_out, extension_out):
                 group.append(str(comb) + '(CB:min)')
         combination_groups.append(group)
 
+    # Create new excel file for midas_result_extraction
     with xlsxwriter.Workbook(file_path_out + file_name_out + '_MLC2' + extension_out) as workbook:
-        worksheet = workbook.add_worksheet()
+        # Create the relevant sheets on the excel file
+        ws_readme = workbook.add_worksheet("ReadMe!")
+        ws_extract = workbook.add_worksheet("Extract Results")
+        ws_elements = workbook.add_worksheet("Elements")
+        ws_combinations = workbook.add_worksheet("Combinations")
 
+        # Fill in the Elements sheet
+        ws_elements.write(0, 0, "Element name")
+        ws_elements.write(0, 1, "Element number")
+        ws_elements.write(0, 2, "Node(s)")
+        ws_elements.data_validation('C2:C200', {'validate': 'list', 'source': ['Part   i', 'Part 1/4', 'Part 2/4', 'Part 3/4', 'Part   j']})
+       
+        ws_elements.set_column('A:A', 15)
+        ws_elements.set_column('B:C', 15)
+
+        # Fill in the Combinations sheet
         for row in range(len(combination_envelopes)):
-            worksheet.write(row, 0, combination_envelopes[row])
-            worksheet.write(row, 1, list_string_converter(combination_groups[row]))
+            ws_combinations.write(0, 0, "Combination Envelopes")
+            ws_combinations.write(0, 1, "Combinations")
+            ws_combinations.write(row + 1, 0, combination_envelopes[row])
+            ws_combinations.write(row + 1, 1, list_string_converter(combination_groups[row]))
+        ws_combinations.set_column('A:A', 25)
+
+        # Fill in the Extract Results sheet (feeds from Elements and Combinations Sheets below)
+        ws_extract.write(0, 0, "Element name")
+        ws_extract.data_validation('A2:A200', {'validate': 'list', 'source': '=Elements!$A$2:$A$200'})
+        ws_extract.write(0, 1, "Element no.")
+        ws_extract.write(0, 2, "Node(s)")
+        for row in range(2, 200):
+            ws_extract.write_formula(f'B{row}', f'=IFERROR(VLOOKUP(A{row}, Elements!$A$2:$C$200, 2, FALSE),"")')
+            ws_extract.write_formula(f'C{row}', f'=IFERROR(VLOOKUP(A{row}, Elements!$A$2:$C$200, 3, FALSE),"")')
+
+        ws_extract.write(0, 3, "Fx")
+        ws_extract.write(0, 4, "Fy")
+        ws_extract.write(0, 5, "Fz")
+        ws_extract.write(0, 6, "Mx")
+        ws_extract.write(0, 7, "My")
+        ws_extract.write(0, 8, "Mz")
+        ws_extract.data_validation('D2:I200', {'validate': 'list', 'source': ['x']})
+
+        for column in range(9,19):
+            ws_extract.write(0, column, f"Env {column - 8}")
+
+        for letter in char_range('J', 'S'):
+            ws_extract.data_validation(f'{letter}2:{letter}200', {'validate': 'list', 'source': '=Combinations!$A$2:$A$200'})
+
+        ws_extract.set_column('A:A', 15)
+        ws_extract.set_column('B:C', 10)
+        ws_extract.set_column('D:I', 2.5)
+
+        
+
+        
+
+        
+        
+        
+
+
+
+
 

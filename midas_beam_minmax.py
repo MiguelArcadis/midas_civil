@@ -34,10 +34,9 @@ else:
 	print("You have not provided the '_' separator for combinations. All loadcases will be treated has not belonging to any combination.")
 	df_out = pfr.extract_combinationless_results(df_in, forces_to_extract)
 
-"""
+
 # Creates and saves outputfile
 file_path_out = file_path_in
 file_name_out = file_name_in + "_MinMax"
 extension_out = extension_in
 df_out.to_excel(file_path_out + file_name_out + extension_out)
-"""
