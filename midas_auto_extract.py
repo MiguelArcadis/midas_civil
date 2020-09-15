@@ -7,17 +7,17 @@ import numpy as np
 import ctypes
 from force_results import process_force_results as pfr
 
-xlsx_file = pd.ExcelFile(r'C:\Users\silvam3530\Desktop\BRB - Load Comb 4_MLC2.xlsx')
+file_path_in = r"C:\Users\silvam3530\Desktop" + "\\"
+file_name_in = "BRB - Load Comb 4_MLC2"
+extension_in = ".xlsx"
 
 # File path to save results files (processed loads)
-file_path_out = r"C:\\Users\\silvam3530\\Desktop" + "\\"
-file_name_out = "Midas Auto Extract"
+file_path_out = r"C:\Users\silvam3530\Desktop" + "\\"
+file_name_out = "Extracted Results"
 extension_out = ".xlsx"
 
-
-
-source_df = pd.read_excel(xlsx_file, sheet_name='Extract Results')
-combs_df = pd.read_excel(xlsx_file, sheet_name='Combinations')
+source_df = pd.read_excel(file_path_in + file_name_in + extension_in, sheet_name='Extract Results')
+combs_df = pd.read_excel(file_path_in + file_name_in + extension_in, sheet_name='Combinations')
 
 source_df.dropna(axis=0, how='all', inplace=True)
 
@@ -27,9 +27,8 @@ elem_extract = source_df['Element no.'].tolist()
 ELEMENTS_TO_EXTRACT = list(dict.fromkeys(elem_extract))
 
 # Midas parts to extract
-parts_extract = source_df['Node(s)'].tolist()
+parts_extract = source_df['Node'].tolist()
 ELEMENT_PARTS_TO_EXTRACT = list(dict.fromkeys(parts_extract))
-print(ELEMENT_PARTS_TO_EXTRACT)
 
 # Midas forces to extract
 all_force_cols_names = ['Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz']
@@ -104,10 +103,8 @@ def midas_parser(elements_to_extract, combs_to_extract, element_parts_to_extract
 			ELEMENT_PARTS_TO_EXTRACT.remove(item)
 		else:
 			ELEMENT_PARTS_TO_EXTRACT.append(item)
-			print(ELEMENT_PARTS_TO_EXTRACT)
 
 	for part in ELEMENT_PARTS_TO_EXTRACT:
-		print(f"Clicked on part: {part}")
 		app.RecordsActivationDialog.ListBox3.select(part).set_focus().type_keys('{VK_SPACE}')
 
 	# Press 'ok' for Midas to calculate results
