@@ -18,7 +18,7 @@ file_name_out_detailed = "Load Combs - Detailed"
 extension_out_detailed = extension_in
 
 file_path_out_extractor = file_path_in
-file_name_out_extractor = "Load Extractor"
+file_name_out_extractor = "Results Extractor"
 extension_out_extractor = extension_in
 
 #Creates and processes input dataframe to rename columns and fill blanks

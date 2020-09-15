@@ -7,12 +7,12 @@ import numpy as np
 import ctypes
 from force_results import process_force_results as pfr
 
-file_path_in = r"C:\Users\silvam3530\Desktop" + "\\"
-file_name_in = "BRB - Load Comb 4_MLC2"
+file_path_in = r"C:\Users\silvam3530\ARCADIS\ASC HS2 Project Portal - 03 - Project Execution\07 - C3 Section\05 - Boddington Cutting\01 - BR - Bridges\Banbury Rd OB (Boddington)\02 Working\01 Structures\02 Models\03. Combs&Results" + "\\"
+file_name_in = "Results Extractor"
 extension_in = ".xlsx"
 
 # File path to save results files (processed loads)
-file_path_out = r"C:\Users\silvam3530\Desktop" + "\\"
+file_path_out = file_path_in
 file_name_out = "Extracted Results"
 extension_out = ".xlsx"
 
@@ -64,7 +64,7 @@ def midas_parser(elements_to_extract, combs_to_extract, element_parts_to_extract
 	running_windows = [window.window_text() for window in windows]
 
 	midas_title = ""
-	target_title = "MIDAS"
+	target_title = "Civil"
 
 	for window in running_windows:
 		if target_title in window:
