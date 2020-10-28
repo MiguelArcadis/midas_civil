@@ -96,7 +96,10 @@ def midas_parser(elements_to_extract, combs_to_extract, element_parts_to_extract
 
 	# Select the element parts 
 	preselected_parts = ['Part   i', 'Part   j']
-	element_parts_to_extract_midas = ELEMENT_PARTS_TO_EXTRACT.copy()
+	element_parts_to_extract_midas = list(dict.fromkeys(ELEMENT_PARTS_TO_EXTRACT)).copy()
+	print('-'*30)
+	print(element_parts_to_extract_midas)
+	print('-'*30)
 
 	for item in preselected_parts:
 		if item in element_parts_to_extract_midas:
@@ -105,7 +108,10 @@ def midas_parser(elements_to_extract, combs_to_extract, element_parts_to_extract
 			element_parts_to_extract_midas.append(item)
 
 	for part in element_parts_to_extract_midas:
-		app.RecordsActivationDialog.ListBox3.select(part).set_focus().type_keys('{VK_SPACE}')
+		print(element_parts_to_extract_midas)
+		#app.RecordsActivationDialog.ListBox3.select(part).set_focus().type_keys('{VK_SPACE}')
+		app.RecordsActivationDialog.ListBox3.select(part).type_keys('{VK_SPACE}')
+		keyboard.send_keys('{VK_DOWN}')
 
 	# Press 'ok' for Midas to calculate results
 	app.RecordsActivationDialog.OK.click()
