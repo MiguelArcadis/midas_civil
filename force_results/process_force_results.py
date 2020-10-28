@@ -23,9 +23,9 @@ def extract_beam_results_per_combination(df_in, forces_to_extract, elements_to_e
 	#Re-orders the dataframe
 	df_in = df_in[['Element', 'Part', 'Node', 'Combination', 'Loadcase', 'Leading Force', 'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz']]
 	#Adds new columns to extract possible critical results that are not min and max
-	df_in['[SRSS] Fx, My'] = (df_in['Fx'] ** 2 + df_in['My'] ** 2) ** 0.5
-	df_in['[SRSS] Fx, Mz'] = (df_in['Fx'] ** 2 + df_in['Mz'] ** 2) ** 0.5
-	df_in['[SRSS] My, Mz'] = (df_in['My'] ** 2 + df_in['Mz'] ** 2) ** 0.5
+	df_in['[SRSS] Fx My'] = (df_in['Fx'] ** 2 + df_in['My'] ** 2) ** 0.5
+	df_in['[SRSS] Fx Mz'] = (df_in['Fx'] ** 2 + df_in['Mz'] ** 2) ** 0.5
+	df_in['[SRSS] My Mz'] = (df_in['My'] ** 2 + df_in['Mz'] ** 2) ** 0.5
 
 	unique_combinations = list(df_in['Combination'].unique())
 

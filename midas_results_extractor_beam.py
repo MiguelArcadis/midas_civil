@@ -3,6 +3,7 @@ from pywinauto import keyboard
 from pywinauto.timings import always_wait_until
 from time import sleep
 import pandas as pd
+pd.set_option('display.max_columns', None)
 import numpy as np
 import ctypes
 from force_results import process_force_results as pfr
@@ -57,7 +58,6 @@ elem_num_names = dict(zip(ELEMENTS_TO_EXTRACT, elem_names))
 
 
 def midas_parser(elements_to_extract, combs_to_extract, element_parts_to_extract):
-	"""
 	# Check all running apps to find Midas
 	windows = pwa.Desktop(backend="win32").windows()
 	running_windows = [window.window_text() for window in windows]
@@ -96,14 +96,15 @@ def midas_parser(elements_to_extract, combs_to_extract, element_parts_to_extract
 
 	# Select the element parts 
 	preselected_parts = ['Part   i', 'Part   j']
+	element_parts_to_extract_midas = ELEMENT_PARTS_TO_EXTRACT.copy()
 
 	for item in preselected_parts:
-		if item in ELEMENT_PARTS_TO_EXTRACT:
-			ELEMENT_PARTS_TO_EXTRACT.remove(item)
+		if item in element_parts_to_extract_midas:
+			element_parts_to_extract_midas.remove(item)
 		else:
-			ELEMENT_PARTS_TO_EXTRACT.append(item)
+			element_parts_to_extract_midas.append(item)
 
-	for part in ELEMENT_PARTS_TO_EXTRACT:
+	for part in element_parts_to_extract_midas:
 		app.RecordsActivationDialog.ListBox3.select(part).set_focus().type_keys('{VK_SPACE}')
 
 	# Press 'ok' for Midas to calculate results
@@ -143,9 +144,7 @@ def midas_parser(elements_to_extract, combs_to_extract, element_parts_to_extract
 
 	sleep(25)
 	keyboard.send_keys(r'^c')
-
 	sleep(10)
-	"""
 
 	# We can't select the table headers so we'll create them manually to use in pandas
 	column_names = ["Elem", "Load", "Part", "Component", "Axial (kN)", "Shear-y (kN)", "Shear-z (kN)", "Torsion (kN*m)", "Moment-y (kN*m)", "Moment-z (kN*m)"]
